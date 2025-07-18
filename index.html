@@ -30,7 +30,7 @@
   <script src="https://cdn.scaledrone.com/scaledrone.min.js"></script>
   <script>
     // === Настройки ===
-    const CHANNEL_ID = 'yi2w1b1q1w1w'; // demo channel, для продакшена — свой!
+    const CHANNEL_ID = '48QhVW7maV8YdCxb'; // demo channel, для продакшена — свой!
     const ROOM_NAME = 'dots-presence';
     // ===
     let user = { name: '', id: '', x: 0, y: 0 };
@@ -91,15 +91,18 @@
       canvas.innerHTML = '';
       Object.values(users).forEach(u => {
         if (!u) return;
-        const dot = document.createElement('div');
-        dot.className = 'user-dot';
-        dot.style.left = u.x + 'px';
-        dot.style.top = u.y + 'px';
-        dot.textContent = u.name;
-        canvas.appendChild(dot);
+        const label = document.createElement('div');
+        label.className = 'user-dot';
+        label.style.left = u.x + 'px';
+        label.style.top = u.y + 'px';
+        label.style.background = 'none';
+        label.style.color = '#ffe082';
+        label.style.fontSize = '1.3rem';
+        label.style.fontWeight = 'bold';
+        label.textContent = u.name;
+        canvas.appendChild(label);
       });
     }
   </script>
 </body>
 </html>
- 
