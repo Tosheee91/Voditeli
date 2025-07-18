@@ -1,1 +1,194 @@
- 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Онлайн точки пользователей</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #181c24;
+    }
+    #modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(20, 24, 32, 0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: opacity 0.5s, visibility 0.5s;
+    }
+    #modal.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .modal-content {
+      background: #23283a;
+      padding: 32px 28px 24px 28px;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px 0 rgba(0,0,0,0.18);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: popIn 0.6s cubic-bezier(.68,-0.55,.27,1.55);
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.7); opacity: 0; }
+      80% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+    .modal-content input {
+      font-size: 1.1rem;
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: none;
+      margin-bottom: 18px;
+      outline: none;
+      width: 220px;
+      background: #181c24;
+      color: #fff;
+      box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08);
+    }
+    .modal-content button {
+      font-size: 1.1rem;
+      padding: 10px 32px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(90deg, #4f8cff 0%, #1e3c60 100%);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .modal-content button:hover {
+      background: linear-gradient(90deg, #1e3c60 0%, #4f8cff 100%);
+      transform: scale(1.05);
+    }
+    #canvas {
+      width: 100vw;
+      height: 100vh;
+      position: absolute;
+      top: 0; left: 0;
+      z-index: 1;
+      background: transparent;
+      pointer-events: none;
+    }
+    .user-dot {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4f8cff 60%, #ffe082 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #23283a;
+      font-weight: 700;
+      font-size: 1.05rem;
+      box-shadow: 0 2px 16px 0 rgba(80,120,200,0.18);
+      user-select: none;
+      pointer-events: none;
+      opacity: 0.92;
+      transition: box-shadow 0.3s;
+      animation: appearDot 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+    }
+    @keyframes appearDot {
+      0% { transform: scale(0.5); opacity: 0; }
+      80% { transform: scale(1.15); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div id="modal">
+    <div class="modal-content">
+      <label for="username" style="color:#fff;font-size:1.2rem;margin-bottom:10px;">Введите ваше имя</label>
+      <input id="username" type="text" maxlength="16" autocomplete="off" autofocus />
+      <button id="ok-btn">Окей</button>
+    </div>
+  </div>
+  <div id="canvas"></div>
+  <script src="https://cdn.scaledrone.com/scaledrone.min.js"></script>
+  <script>
+    // === Настройки ===
+    const CHANNEL_ID = 'yi2w1b1q1w1w'; // demo channel, для продакшена — свой!
+    const ROOM_NAME = 'dots-presence';
+    // ===
+    let user = { name: '', id: '', x: 0, y: 0 };
+    let users = {};
+    const canvas = document.getElementById('canvas');
+    // Генерация случайной позиции
+    function randomPos() {
+      const pad = 40;
+      return {
+        x: Math.floor(Math.random() * (window.innerWidth - pad*2)) + pad,
+        y: Math.floor(Math.random() * (window.innerHeight - pad*2)) + pad
+      };
+    }
+    // Модальное окно
+    const modal = document.getElementById('modal');
+    const input = document.getElementById('username');
+    const okBtn = document.getElementById('ok-btn');
+    okBtn.onclick = () => {
+      const name = input.value.trim();
+      if (!name) return input.focus();
+      user.name = name;
+      const pos = randomPos();
+      user.x = pos.x;
+      user.y = pos.y;
+      modal.classList.add('hide');
+      setTimeout(() => modal.style.display = 'none', 600);
+      connect();
+    };
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') okBtn.click();
+    });
+    // === Scaledrone ===
+    let drone, room;
+    function connect() {
+      drone = new Scaledrone(CHANNEL_ID, { data: user });
+      drone.on('open', error => {
+        if (error) return alert('Ошибка соединения!');
+        user.id = drone.clientId;
+        room = drone.subscribe(ROOM_NAME, { historyCount: 0 });
+        room.on('open', err => { if (err) alert('Ошибка комнаты!'); });
+        room.on('members', m => {
+          users = {};
+          m.forEach(u => users[u.id] = u.clientData);
+          renderDots();
+        });
+        room.on('member_join', m => {
+          users[m.id] = m.clientData;
+          renderDots();
+        });
+        room.on('member_leave', m => {
+          delete users[m.id];
+          renderDots();
+        });
+      });
+    }
+    // === dots ===
+    function renderDots() {
+      canvas.innerHTML = '';
+      Object.values(users).forEach(u => {
+        if (!u) return;
+        const dot = document.createElement('div');
+        dot.className = 'user-dot';
+        dot.style.left = u.x + 'px';
+        dot.style.top = u.y + 'px';
+        dot.textContent = u.name;
+        canvas.appendChild(dot);
+      });
+    }
+    // Удаление точки при закрытии вкладки
+    window.addEventListener('beforeunload', () => {
+      if (drone) drone.close();
+    });
+  </script>
+</body>
+</html> 
