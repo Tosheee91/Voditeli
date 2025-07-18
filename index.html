@@ -1,15 +1,220 @@
-^<^!DOCTYPE
-html^>^<html
-lang=ru^>^<head^>^<meta
-charset=UTF-8^>^<title^>Водители^</title^>^</head^>^<body^>^<h1^>Добро
-пожаловать
-на
-сайт
-Водители
-!^</h1^>^<p^>Это
-ваш
-первый
-сайт
-на
-GitHub
-Pages.^</p^>^</body^>^</html^>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Водители — обучение и подготовка</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: 'Segoe UI', 'Arial', sans-serif;
+      color: #fff;
+    }
+    body {
+      min-height: 100vh;
+      min-width: 100vw;
+      position: relative;
+    }
+    .bg {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100vw;
+      height: 100vh;
+      background: url('https://pulkovoairport.ru/upload/iblock/2f9/6pdmr2uczbrfs2nun9dw9w724osbkmqb/pulkovo.jpg') center center/cover no-repeat;
+      filter: blur(18px) brightness(0.7);
+      z-index: 0;
+    }
+    .overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(30, 40, 60, 0.45);
+      z-index: 1;
+    }
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 32px 32px 32px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    nav {
+      display: flex;
+      gap: 18px;
+      margin-bottom: 32px;
+      justify-content: center;
+      z-index: 3;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1.08rem;
+      padding: 8px 18px;
+      border-radius: 12px;
+      background: rgba(40,60,90,0.25);
+      transition: background 0.3s, box-shadow 0.3s, color 0.3s;
+      box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08);
+      cursor: pointer;
+      outline: none;
+    }
+    nav a:hover, nav a:focus {
+      background: rgba(80,120,200,0.45);
+      color: #ffe082;
+      box-shadow: 0 4px 16px 0 rgba(80,120,200,0.18);
+    }
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 0.5em;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 16px rgba(0,0,0,0.25);
+      text-align: center;
+    }
+    .section {
+      background: rgba(20, 30, 50, 0.75);
+      border-radius: 18px;
+      margin-bottom: 28px;
+      padding: 28px 32px;
+      box-shadow: 0 4px 32px 0 rgba(0,0,0,0.10);
+      transition: background 0.3s, transform 0.4s, box-shadow 0.4s;
+      opacity: 0;
+      transform: translateY(40px);
+      animation: fadeInUp 1s forwards;
+    }
+    .section:hover {
+      background: rgba(40, 60, 100, 0.85);
+      box-shadow: 0 8px 40px 0 rgba(80,120,200,0.18);
+      transform: scale(1.025);
+    }
+    .section:last-child {
+      margin-bottom: 0;
+    }
+    .section h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5em;
+    }
+    .section p {
+      margin: 0;
+      font-size: 1.1rem;
+      line-height: 1.7;
+    }
+    .cta-btn {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 14px 36px;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(90deg, #4f8cff 0%, #1e3c60 100%);
+      border: none;
+      border-radius: 24px;
+      box-shadow: 0 4px 24px 0 rgba(80,120,200,0.18);
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+      outline: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-btn:hover, .cta-btn:focus {
+      background: linear-gradient(90deg, #1e3c60 0%, #4f8cff 100%);
+      color: #ffe082;
+      transform: scale(1.06);
+      box-shadow: 0 8px 32px 0 rgba(80,120,200,0.28);
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 16px 4vw;
+      }
+      .section {
+        padding: 16px 8px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      nav {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="overlay"></div>
+  <div class="container">
+    <nav>
+      <a href="#zayavka">Заявка</a>
+      <a href="#raspisanie">Расписание</a>
+      <a href="#sezon">Сезонная подготовка</a>
+      <a href="#teoria">Теория</a>
+      <a href="#praktika">Практика</a>
+      <a href="#gde">Где проходит</a>
+    </nav>
+    <h1>Обучение водителей: ваш путь к профессионализму</h1>
+    <div class="section" id="zayavka">
+      <h2>Заявка на обучение</h2>
+      <p>Оставьте заявку на обучение в нашей автошколе — мы свяжемся с вами для уточнения деталей и подбора оптимального курса. Заполните форму на сайте или позвоните по телефону, чтобы начать свой путь к водительскому удостоверению.</p>
+      <button class="cta-btn" onclick="alert('Спасибо за интерес! Форма заявки появится в следующей версии.')">Оставить заявку</button>
+    </div>
+    <div class="section" id="raspisanie">
+      <h2>Расписание занятий</h2>
+      <p>Занятия проходят в удобное для вас время: утренние, дневные и вечерние группы. Актуальное расписание всегда доступно на сайте и обновляется каждую неделю. Индивидуальный подход к каждому ученику.</p>
+    </div>
+    <div class="section" id="sezon">
+      <h2>Сезонная подготовка</h2>
+      <p>Мы предлагаем специальные курсы по вождению в зимних и летних условиях, чтобы вы чувствовали себя уверенно на дороге в любое время года. Практические занятия проходят на современных автомобилях с опытными инструкторами.</p>
+    </div>
+    <div class="section" id="teoria">
+      <h2>Теория</h2>
+      <p>Теоретические занятия включают изучение правил дорожного движения, основ безопасности, психологии вождения и оказания первой помощи. Используем современные методики и интерактивные материалы для лучшего усвоения знаний.</p>
+    </div>
+    <div class="section" id="praktika">
+      <h2>Практика (стажировка)</h2>
+      <p>Практические занятия проходят на специально оборудованных площадках и в реальных городских условиях. Каждый ученик получает индивидуальное количество часов вождения, исходя из своих навыков и потребностей.</p>
+    </div>
+    <div class="section" id="gde">
+      <h2>Где проходит обучение</h2>
+      <p>Наши учебные классы и автодромы расположены в удобных районах города, легко добраться на общественном транспорте. Все площадки оснащены современным оборудованием для комфортного и эффективного обучения.</p>
+    </div>
+  </div>
+  <script>
+    // Анимация появления секций поочередно
+    document.addEventListener('DOMContentLoaded', () => {
+      const sections = document.querySelectorAll('.section');
+      sections.forEach((section, i) => {
+        section.style.animationDelay = (0.2 + i * 0.18) + 's';
+      });
+    });
+    // Плавный скролл по якорям
+    document.querySelectorAll('nav a').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+    });
+  </script>
+</body>
+</html> 
